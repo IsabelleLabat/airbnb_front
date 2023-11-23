@@ -23,7 +23,7 @@ const Room = ({ route }) => {
 
   console.log(route.params.id);
 
-  const { roomId } = route.params;
+  const { roomId } = route.params.id;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -31,7 +31,7 @@ const Room = ({ route }) => {
           `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms/${roomId}`
         );
         setData(response.data);
-
+        console.log(response.data);
         setLoading(false);
       } catch (error) {
         setError(error);

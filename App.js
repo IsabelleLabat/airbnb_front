@@ -76,14 +76,25 @@ export default function App() {
                   headerShown: false,
                 }}
               >
-                <Tab.Screen name="Home" component={Home} />
+                <Tab.Screen name="Home">
+                  {() => (
+                    <Stack.Navigator>
+                      <Stack.Screen name="Home">
+                        {(props) => <Home {...props} />}
+                      </Stack.Screen>
+                      <Stack.Screen name="Room">
+                        {(props) => <Room {...props} />}
+                      </Stack.Screen>
+                    </Stack.Navigator>
+                  )}
+                </Tab.Screen>
+
                 <Tab.Screen name="Around Me" component={AroundMe} />
                 <Tab.Screen name="My profile" component={MyProfile} />
               </Tab.Navigator>
             )}
           </Stack.Screen>
         )}
-        <Stack.Screen name="Room" component={Room} />
       </Stack.Navigator>
     </NavigationContainer>
   );

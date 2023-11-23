@@ -39,9 +39,9 @@ const Home = ({ navigation }) => {
     // boucle qui tourne 5 fois
     for (let i = 1; i <= 5; i++) {
       if (i <= rate) {
-        tab.push(<AntDesign name="star" size={24} color="yellow" />);
+        tab.push(<AntDesign name="star" size={24} color="yellow" key={i} />);
       } else {
-        tab.push(<AntDesign name="star" size={24} color="grey" />);
+        tab.push(<AntDesign name="star" size={24} color="grey" key={i} />);
       }
     }
     return tab;
