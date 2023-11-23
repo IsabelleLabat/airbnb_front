@@ -23,7 +23,7 @@ const Room = ({ route }) => {
 
   console.log(route.params.id);
 
-  const { roomId } = route.params.id;
+  const roomId = route.params.id;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -46,9 +46,9 @@ const Room = ({ route }) => {
     // boucle qui tourne 5 fois
     for (let i = 1; i <= 5; i++) {
       if (i <= rate) {
-        tab.push(<AntDesign name="star" size={24} color="yellow" />);
+        tab.push(<AntDesign name="star" size={24} color="yellow" key={i} />);
       } else {
-        tab.push(<AntDesign name="star" size={24} color="grey" />);
+        tab.push(<AntDesign name="star" size={24} color="grey" key={i} />);
       }
     }
     return tab;
@@ -80,11 +80,12 @@ const Room = ({ route }) => {
             <Text style={{ fontSize: 14 }}>{data.reviews} Reviews</Text>
           </View>
 
-          {/* <Image
+          <Image
             source={{ uri: data.user.account.photo.url }}
             style={styles.avatar}
-          /> */}
+          />
         </View>
+        <Text>{data.description}</Text>
       </View>
     </View>
   );

@@ -71,15 +71,11 @@ export default function App() {
         ) : (
           <Stack.Screen name="Tab" options={{ headerShown: false }}>
             {() => (
-              <Tab.Navigator
-                screenOptions={{
-                  headerShown: false,
-                }}
-              >
+              <Tab.Navigator>
                 <Tab.Screen name="Home">
                   {() => (
                     <Stack.Navigator>
-                      <Stack.Screen name="Home">
+                      <Stack.Screen name="HomeScreen">
                         {(props) => <Home {...props} />}
                       </Stack.Screen>
                       <Stack.Screen name="Room">
