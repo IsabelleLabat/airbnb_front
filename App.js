@@ -8,6 +8,9 @@ import { Ionicons } from "@expo/vector-icons";
 import SignIn from "./containers/SignIn";
 import SignUp from "./containers/SignUp";
 import Home from "./containers/Home";
+import Room from "./containers/Room";
+import AroundMe from "./containers/AroundMe";
+import MyProfile from "./containers/MyProfile";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -66,10 +69,21 @@ export default function App() {
             </Stack.Screen>
           </>
         ) : (
-          <Tab.Navigator>
-            <Tab.Screen name="Home" component={Home} />
-          </Tab.Navigator>
+          <Stack.Screen name="Tab" options={{ headerShown: false }}>
+            {() => (
+              <Tab.Navigator
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+                <Tab.Screen name="Home" component={Home} />
+                <Tab.Screen name="Around Me" component={AroundMe} />
+                <Tab.Screen name="My profile" component={MyProfile} />
+              </Tab.Navigator>
+            )}
+          </Stack.Screen>
         )}
+        <Stack.Screen name="Room" component={Room} />
       </Stack.Navigator>
     </NavigationContainer>
   );
