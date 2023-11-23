@@ -39,7 +39,7 @@ const Home = ({ navigation }) => {
     // boucle qui tourne 5 fois
     for (let i = 1; i <= 5; i++) {
       if (i <= rate) {
-        tab.push(<AntDesign name="star" size={24} color="yellow" key={i} />);
+        tab.push(<AntDesign name="star" size={24} color="#FDB100" key={i} />);
       } else {
         tab.push(<AntDesign name="star" size={24} color="grey" key={i} />);
       }
@@ -80,8 +80,6 @@ const Home = ({ navigation }) => {
     <ActivityIndicator size="large" color="purple" style={{ marginTop: 100 }} />
   ) : (
     <View style={styles.container}>
-      <Image style={styles.logo} source={require("../assets/logo.png")}></Image>
-
       <FlatList
         style={styles.flatList}
         data={data}
@@ -134,13 +132,10 @@ const useStyle = () => {
   const { height, width } = useWindowDimensions();
   const styles = StyleSheet.create({
     container: {
-      marginTop: 20,
-
       alignItems: "center",
       justifyContent: "center",
     },
     logo: {
-      marginTop: 50,
       width: 30,
       height: 30,
       resizeMode: "contain",

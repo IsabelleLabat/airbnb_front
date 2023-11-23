@@ -1,16 +1,15 @@
 import {
-  FlatList,
   Text,
   View,
   Image,
   ActivityIndicator,
   StyleSheet,
-  TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { AntDesign } from "@expo/vector-icons";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 // import { useRoute } from "@react-navigation/native";
 
@@ -20,7 +19,10 @@ const Room = ({ route }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const styles = useStyle();
-
+  const [coordinates, setCoordinates] = useState({
+    latitude: 48.850869,
+    longitude: 2.378946,
+  });
   console.log(route.params.id);
 
   const roomId = route.params.id;
@@ -46,7 +48,7 @@ const Room = ({ route }) => {
     // boucle qui tourne 5 fois
     for (let i = 1; i <= 5; i++) {
       if (i <= rate) {
-        tab.push(<AntDesign name="star" size={24} color="yellow" key={i} />);
+        tab.push(<AntDesign name="star" size={24} color="#FDB100" key={i} />);
       } else {
         tab.push(<AntDesign name="star" size={24} color="grey" key={i} />);
       }
@@ -57,7 +59,6 @@ const Room = ({ route }) => {
     <ActivityIndicator size="large" color="purple" style={{ marginTop: 100 }} />
   ) : (
     <View style={styles.container}>
-      {/* <Image style={styles.logo} source={require("../assets/logo.png")}></Image> */}
       <View
       // style={{
       //   padding: 10,
@@ -86,7 +87,35 @@ const Room = ({ route }) => {
           />
         </View>
         <Text>{data.description}</Text>
+        {/* <Text>longitude : {data.location[0]}</Text>
+        <Text>latitude : {data.location[1]}</Text> */}
       </View>
+      <MapView
+        style={styles.map}
+        // Pour demander à Iphone d'utiliser GoogleMaps plutôt que Maps
+        provider={PROVIDER_GOOGLE}
+        // Dévinition du centrage de la carte
+        initialRegion={{
+          longitude: coordinates.longitude,
+          latitude: coordinates.latitude,
+          // Niveau de zoom de la carte
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
+        }}
+        // Afficher la position de l'utilisateur (fonctionne uniquement si l'utilisateur à accepter le partage de sa localisation)
+        showsUserLocation
+      >
+        <Marker
+          key={roomId}
+          coordinate={{
+            latitude: data.location[1],
+            longitude: data.location[0],
+          }}
+          // S'affiche lorsque l'on appuie sur l'épingle
+          title={"marker.title"}
+          description={"marker.description"}
+        />
+      </MapView>
     </View>
   );
 };
@@ -154,6 +183,12 @@ const useStyle = () => {
       // backgroundColor: "#f9c2ff",
       marginTop: 20,
       width: "100%",
+    },
+    map: {
+      // Par défault, il prend toute la largeur de son parent car nous somme en flexbox
+      height: 290,
+      width: 400,
+      marginTop: 20,
     },
   });
   return styles;

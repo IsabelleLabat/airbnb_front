@@ -8,10 +8,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useEffect, useState } from "react";
+import * as Location from "expo-location";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import axios from "axios";
 
 const AroundMe = () => {
   const [error, setError] = useState();
+  const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [coords, setCoords] = useState();
   const [coordinates, setCoordinates] = useState({
@@ -19,7 +22,7 @@ const AroundMe = () => {
     longitude: 2.378946,
   });
   useEffect(() => {
-    const askPermission = async () => {
+    const askPermissionAndGetCoords = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
 
       if (status === "granted") {
@@ -39,6 +42,24 @@ const AroundMe = () => {
 
       setIsLoading(false);
     };
+    askPermissionAndGetCoords();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          " https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms/around/latitude/longitude"
+        );
+        console.log(response.data);
+        setData(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        setError(error);
+        setIsLoading(false);
+      }
+    };
+    fetchData();
   }, []);
 
   return (
