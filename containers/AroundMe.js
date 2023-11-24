@@ -14,59 +14,102 @@ import axios from "axios";
 
 const AroundMe = () => {
   const [error, setError] = useState();
-  const [data, setData] = useState({});
+
   const [isLoading, setIsLoading] = useState(true);
-  const [coords, setCoords] = useState();
-  const [coordinates, setCoordinates] = useState({
+  const [coords, setCoords] = useState({});
+  const [userCoords, setUserCoords] = useState({
     latitude: 48.850869,
     longitude: 2.378946,
   });
+  const [roomsList, setRoomsList] = useState([]);
+
   useEffect(() => {
     const askPermissionAndGetCoords = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      // Demande la permission d'accéder aux coordonnées de l'utilisateur
+      const { status } = await Location.requestForegroundPermissionsAsync();
 
+      //   console.log("status>>>", status);
       if (status === "granted") {
-        // console.log("ok");
+        //  -- L'utilisateur donne l'autorisation d'accéder à ses coordonées
+        // console.log("if");
 
-        // Récupérer les coordonnées
+        // -- Récupère les coordonnées de l'utilisateur
         const { coords } = await Location.getCurrentPositionAsync();
-        // console.log("response coords>", coords);
+        // console.log(coords);
 
-        setCoordinates({
+        setUserCoords({
           latitude: coords.latitude,
           longitude: coords.longitude,
         });
+
+        try {
+          // Récupère les 4 rooms les plus proches de l'utilisateur
+          const { data } = await axios.get(
+            `https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms/around?latitude= ${coords.latitude}&longitude=${coords.longitude}`
+          );
+
+          console.log("response>>", data.length);
+
+          setRoomsList(data);
+        } catch (error) {
+          console.log("catch>>", error);
+        }
       } else {
-        alert("Access denied");
+        //  -- L'utilisateur n'a pas donnéé l'autorisation d'accéder à ses coordonées
+        console.log("else");
+
+        // Récupère toutes les rooms
+        const { data } = await axios.get(
+          "https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms"
+        );
+        console.log("response 2>>>", data.length);
+
+        setRoomsList(data);
       }
 
       setIsLoading(false);
     };
+
     askPermissionAndGetCoords();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          " https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms/around/latitude/longitude"
+  return isLoading ? (
+    <ActivityIndicator />
+  ) : (
+    <MapView
+      style={styles.map}
+      initialRegion={{
+        latitude: userCoords.latitude,
+        longitude: userCoords.longitude,
+        latitudeDelta: 0.2,
+        longitudeDelta: 0.2,
+      }}
+      showsUserLocation
+    >
+      {roomsList.map((room) => {
+        // console.log(">>>", room.location);
+        return (
+          <Marker
+            key={room._id}
+            coordinate={{
+              latitude: room.location[1],
+              longitude: room.location[0],
+            }}
+            // Pour naviguer vers l'écran de la room lorsqu'on appuie sur l'épingle
+            onPress={() => {
+              navigation.navigate("RoomMap", { id: room._id });
+            }}
+          />
         );
-        console.log(response.data);
-        setData(response.data);
-        setIsLoading(false);
-      } catch (error) {
-        setError(error);
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  return (
-    <View>
-      <Text>Around Me</Text>
-    </View>
+      })}
+    </MapView>
   );
 };
 
 export default AroundMe;
+
+const styles = StyleSheet.create({
+  map: {
+    flex: 1,
+  },
+});

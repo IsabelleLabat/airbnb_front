@@ -115,17 +115,32 @@ export default function App() {
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>
-
                 <Tab.Screen
-                  name="Around Me"
-                  component={AroundMe}
+                  name="TabMap"
                   options={{
                     tabBarLabel: "Around Me",
                     tabBarIcon: ({ color, size }) => (
                       <Feather name="map-pin" size={size} color={color} />
                     ),
                   }}
-                />
+                >
+                  {() => (
+                    <Stack.Navigator>
+                      <Stack.Screen name="Around Me" component={AroundMe} />
+
+                      <Stack.Screen
+                        name="RoomMap"
+                        component={Room}
+                        options={{
+                          // Personnalisation du header avec le logo
+                          headerTitle: () => <HeaderLogo />,
+                          headerTitleAlign: "center",
+                        }}
+                      />
+                    </Stack.Navigator>
+                  )}
+                </Tab.Screen>
+
                 <Tab.Screen
                   name="My profile"
                   component={MyProfile}

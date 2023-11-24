@@ -23,7 +23,7 @@ const Room = ({ route }) => {
     latitude: 48.850869,
     longitude: 2.378946,
   });
-  console.log(route.params.id);
+  // console.log(route.params.id);
 
   const roomId = route.params.id;
   useEffect(() => {
